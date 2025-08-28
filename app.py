@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import io
 import calendar
+from dateutil.relativedelta import relativedelta
 
 st.set_page_config(page_title="Roster Converter", layout="centered")
 
@@ -10,8 +11,10 @@ st.write("Upload file roster, pilih bulan & tahun, lalu download hasil konversi.
 
 # === Input bulan & tahun ===
 col1, col2 = st.columns(2)
-month = col1.number_input("Bulan", min_value=1, max_value=12, value=8)
-year = col2.number_input("Tahun", min_value=2000, max_value=2100, value=2025)
+now = datetime.now()
+next_month = now + relativedelta(months=1)
+month = col1.number_input("Bulan", min_value=1, max_value=12, value=next_month.month)
+year = col2.number_input("Tahun", min_value=2000, max_value=2100, value=next_month.year)
 
 sheetroster = 'ROSTER'
 sheetkaryawan = 'KARYAWAN'
@@ -28,7 +31,6 @@ if uploaded_file is not None:
         df_mroster = pd.read_excel(uploaded_file, sheet_name=sheetmroster)
 
         # Siapkan kolom
-        # day_columns = [str(i) for i in range(1, 32)]
         num_days = calendar.monthrange(year, month)[1]
         day_columns = [str(i) for i in range(1, num_days + 1)]
         df_roster.columns = df_roster.columns.map(lambda x: str(x) if isinstance(x, int) else x)
@@ -68,5 +70,6 @@ if uploaded_file is not None:
 
     except Exception as e:
         st.error(f"Terjadi error: {e}")
+
 
 
