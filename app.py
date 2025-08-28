@@ -27,7 +27,8 @@ if uploaded_file is not None:
         df_mroster = pd.read_excel(uploaded_file, sheet_name=sheetmroster)
 
         # Siapkan kolom
-        day_columns = [str(i) for i in range(1, 32)]
+        # day_columns = [str(i) for i in range(1, 32)]
+        day_columns = sorted([col for col in df_roster.columns if str(col).isdigit()], key=lambda x: int(x))
         df_roster.columns = df_roster.columns.map(lambda x: str(x) if isinstance(x, int) else x)
 
         # Reshape (melt)
@@ -65,3 +66,4 @@ if uploaded_file is not None:
 
     except Exception as e:
         st.error(f"Terjadi error: {e}")
+
