@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import io
+import calendar
 
 st.set_page_config(page_title="Roster Converter", layout="centered")
 
@@ -28,7 +29,8 @@ if uploaded_file is not None:
 
         # Siapkan kolom
         # day_columns = [str(i) for i in range(1, 32)]
-        day_columns = sorted([col for col in df_roster.columns if str(col).isdigit()], key=lambda x: int(x))
+        num_days = calendar.monthrange(year, month)[1]
+        day_columns = [str(i) for i in range(1, num_days + 1)]
         df_roster.columns = df_roster.columns.map(lambda x: str(x) if isinstance(x, int) else x)
 
         # Reshape (melt)
@@ -66,4 +68,5 @@ if uploaded_file is not None:
 
     except Exception as e:
         st.error(f"Terjadi error: {e}")
+
 
